@@ -1,39 +1,51 @@
 import sys
 from collections import deque
+
 input = sys.stdin.readline
 
-# 입력 받기
-m, n = map(int, input().split())
-box = [list(map(int, input().split())) for _ in range(n)]
+# M: 가로, N: 세로
+M, N = map(int, input().split())
 
-# BFS 준비
-queue = deque()
-for i in range(n):
-    for j in range(m):
-        if box[i][j] == 1:  # 익은 토마토
-            queue.append((i, j))
+# 상자 상태 입력
+box = [list(map(int, input().split())) for _ in range(N)]
 
-# 상하좌우 이동 벡터
-dx = [-1, 1, 0, 0]
-dy = [0, 0, -1, 1]
+# 방문 체크
+visited = [[False]*M for _ in range(N)]
+
+# 4방향 이동 (상, 하, 좌, 우)
+directions = [(-1,0),(1,0),(0,-1),(0,1)]
+
+# BFS 함수
+def bfs():
+    q = deque()
+    
+    # 시작점: 익은 토마토 위치 모두 큐에 넣기
+    for y in range(N):
+        for x in range(M):
+            if box[y][x] == 1:
+                q.append((y, x))
+                visited[y][x] = True
+    
+    while q:
+        y, x = q.popleft()
+        for dy, dx in directions:
+            ny, nx = y + dy, x + dx
+            if 0 <= ny < N and 0 <= nx < M:
+                if not visited[ny][nx] and box[ny][nx] == 0:
+                    visited[ny][nx] = True
+                    box[ny][nx] = box[y][x] + 1  # 날짜 계산
+                    q.append((ny, nx))
 
 # BFS 실행
-while queue:
-    x, y = queue.popleft()
-    for d in range(4):
-        nx, ny = x + dx[d], y + dy[d]
-        if 0 <= nx < n and 0 <= ny < m and box[nx][ny] == 0:
-            box[nx][ny] = box[x][y] + 1  # 날짜 증가
-            queue.append((nx, ny))
+bfs()
 
 # 결과 계산
 result = 0
-for i in range(n):
-    for j in range(m):
-        if box[i][j] == 0:  # 익지 못한 토마토 존재
+for y in range(N):
+    for x in range(M):
+        if box[y][x] == 0:
             print(-1)
-            sys.exit()
-        result = max(result, box[i][j])
+            sys.exit(0)
+        result = max(result, box[y][x])
 
-# 첫날이 1로 시작했으니 1 빼기
-print(result - 1)
+print(result - 1)  # 익은 토마토 1부터 시작했으므로 1 빼기
