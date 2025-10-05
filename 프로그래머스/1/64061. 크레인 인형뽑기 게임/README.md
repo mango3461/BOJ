@@ -1,5 +1,7 @@
 # [level 1] 크레인 인형뽑기 게임 - 64061 
 
+<img width="2028" height="1101" alt="image" src="https://github.com/user-attachments/assets/3571e059-7050-44cd-a7b6-6a190e199b3e" />
+
 [문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/64061) 
 
 ### 성능 요약
